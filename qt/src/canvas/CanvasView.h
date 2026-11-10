@@ -104,6 +104,8 @@ public:
     /// Two fingers (and the touchpad's rotate gesture) turn the canvas (setting "rotateGesture" of ours, default on;
     /// qt/docs/features/canvas-rotation.md)
     static bool rotateGestureSetting(Settings& settings);
+    /// Whether holding down a finger or the pen opens context actions with an ink tool active.
+    static bool suppressWritingLongPressSetting(Settings& settings);
     /// The smallest zoom in percent of 100 % (setting "smallestZoom" of ours, Settings → Display; default 20,
     /// ViewController::SMALLEST_ZOOM_MIN..MAX)
     static int smallestZoomSetting(Settings& settings);

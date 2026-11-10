@@ -366,6 +366,11 @@ SettingsModel::SettingsModel(AppContext& app, QObject* parent):
     add("snapGrid", [&s] { return QVariant(s.isSnapGrid()); }, [&s](const QVariant& v) { s.setSnapGrid(v.toBool()); });
 
     // --- touch ---
+    add("suppressWritingLongPress", [&s] { return QVariant(CanvasView::suppressWritingLongPressSetting(s)); },
+        [&s](const QVariant& v) {
+            s.getCustomElement("touch").setBool("suppressWritingLongPress", v.toBool());
+            s.customSettingsChanged();
+        });
     add("palmRejectionTimeout",
         [&s] {
             int ms = DEFAULT_PALM_TIMEOUT_MS;
@@ -424,6 +429,23 @@ SettingsModel::SettingsModel(AppContext& app, QObject* parent):
         });
 
     // --- display ---
+#ifdef Q_OS_ANDROID
+    constexpr bool writingDisplayDefault = true;
+#else
+    constexpr bool writingDisplayDefault = false;
+#endif
+    for (const QString key: {QStringLiteral("hideScrollBarsWhileWriting"), QStringLiteral("viewPillOnLeft")}) {
+        add(key,
+            [&s, key] {
+                bool on = writingDisplayDefault;
+                s.getCustomElement("xournalQt").getBool(key.toStdString(), on);
+                return QVariant(on);
+            },
+            [&s, key](const QVariant& v) {
+                s.getCustomElement("xournalQt").setBool(key.toStdString(), v.toBool());
+                s.customSettingsChanged();
+            });
+    }
     // The smallest zoom, percent of 100 % (ViewController::minZoom; a page or a row of pages that would not fit whole
     // goes lower all the same)
     add("smallestZoom", [&s] { return QVariant(CanvasView::smallestZoomSetting(s)); },

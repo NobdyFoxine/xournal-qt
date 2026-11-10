@@ -172,6 +172,7 @@ private:
     bool penHoldFired = false;
     QPointF penHoldPos;
     bool penHoldTool() const;
+    bool writingLongPressSuppressed() const;
     void startPenHold(const Event& event);
     void penHeld();
     /// Hold to straighten (PenGestures.h): a stroke of the pen that rests a while before it is lifted becomes the

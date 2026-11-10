@@ -30,8 +30,8 @@ qt_add_resources(xournal-qt xqt_android_fonts PREFIX /xqt-fonts BASE "${CMAKE_CU
 math(EXPR _xqt_version_code "${PROJECT_VERSION_MAJOR} * 10000 + ${PROJECT_VERSION_MINOR} * 100 + ${PROJECT_VERSION_PATCH}")
 set_target_properties(xournal-qt PROPERTIES
     QT_ANDROID_PACKAGE_SOURCE_DIR "${XQT_ANDROID_DIR}"
-    QT_ANDROID_PACKAGE_NAME "org.xournalqt.app"
-    QT_ANDROID_APP_NAME "Xournal Qt"
+    QT_ANDROID_PACKAGE_NAME "org.xournalqt.writing"
+    QT_ANDROID_APP_NAME "Xournal Qt Writing"
     QT_ANDROID_APP_ICON "@mipmap/ic_launcher"
     QT_ANDROID_VERSION_NAME "${PROJECT_VERSION}"
     QT_ANDROID_VERSION_CODE "${_xqt_version_code}"

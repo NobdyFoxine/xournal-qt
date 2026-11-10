@@ -374,6 +374,16 @@ bool CanvasView::rotateGestureSetting(Settings& settings) {
     return on;
 }
 
+bool CanvasView::suppressWritingLongPressSetting(Settings& settings) {
+#ifdef Q_OS_ANDROID
+    bool on = true;
+#else
+    bool on = false;
+#endif
+    settings.getCustomElement("touch").getBool("suppressWritingLongPress", on);
+    return on;
+}
+
 int CanvasView::smallestZoomSetting(Settings& settings) {
     int percent = ViewController::SMALLEST_ZOOM_DEFAULT;
     settings.getCustomElement("xournalQt").getInt("smallestZoom", percent);

@@ -201,6 +201,27 @@ TEST_F(CanvasItemInputTest, penAndMouseDrawOnTheCanvas) {
     EXPECT_EQ(strokeCount(), 2u);
 }
 
+TEST_F(CanvasItemInputTest, holdingThePenAtTheStartOfAStrokeDoesNotOpenTheMenuWithWritingProtection) {
+    app->getSettings()->getCustomElement("touch").setBool("suppressWritingLongPress", true);
+    QSignalSpy requests(view.get(), &CanvasView::contextRequested);
+    const QPointF from(200, 150);
+    const QPointF to(500, 200);
+
+    tablet(from, Qt::LeftButton, 0.5);
+    wait(600);
+    EXPECT_EQ(requests.size(), 0);
+    tablet(to, Qt::LeftButton, 0.6);
+    tablet(to, Qt::NoButton, 0.0);
+    EXPECT_EQ(strokeCount(), 1u);
+
+    app->getSettings()->getCustomElement("touch").setBool("suppressWritingLongPress", false);
+    tablet(from, Qt::LeftButton, 0.5);
+    wait(600);
+    EXPECT_EQ(requests.size(), 1);
+    tablet(from, Qt::NoButton, 0.0);
+    EXPECT_EQ(strokeCount(), 1u);
+}
+
 // The Surface Pro 8 (2026-09-24): pen strokes had one width. Here the pen's pressure must reach the stroke; the
 // mouse has none.
 TEST_F(CanvasItemInputTest, thePensPressureReachesTheStroke) {

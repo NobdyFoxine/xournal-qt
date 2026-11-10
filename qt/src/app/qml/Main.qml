@@ -110,6 +110,8 @@ ApplicationWindow {
     /// The document is a text file (a .md, a .txt): written with the keyboard, no ink tools
     /// (qt/docs/features/md-editor.md)
     readonly property bool textDoc: app.textDocument !== ""
+    readonly property bool writingWithInk: !textDoc && !canvas.readingOnly
+                                            && ["pen", "highlighter", "eraser"].indexOf(app.tool) >= 0
     /// The cycling buttons' groups (ToolGroups.qml): the fixed tools of the toolbox (select, snip, setsquare, text)
     readonly property ToolGroups toolGroups: ToolGroups {}
     /// A button's tip with the keys of its action as they are set ("Redo (Ctrl+Shift+Z, Ctrl+Y)")
@@ -796,7 +798,8 @@ ApplicationWindow {
         leftInset: win.layout.canvasControlsLeft - canvas.x
         topInset: win.layout.canvasControlsTop - canvas.y
         bottomInset: canvas.y + canvas.height - win.layout.canvasControlsBottom
-        hidden: pageGrid.visible || app.presenting  // (presenting: no scroll bars)
+        hidden: pageGrid.visible || app.presenting
+                || (win.writingWithInk && (app.settings.revision, app.settings.get("hideScrollBarsWhileWriting")))
     }
 
     FileDialog {

@@ -74,6 +74,9 @@ CanvasInput::CanvasInput(CanvasView& view, QObject* parent): QObject(parent), vi
     longPressTimer.setSingleShot(true);
     longPressTimer.setInterval(LONG_PRESS_MS);
     connect(&longPressTimer, &ClockTimer::timeout, this, [this] {
+        if (touchSessionIgnored || touchBlocked() || writingLongPressSuppressed()) {
+            return;
+        }
         cancelFingerStroke();  // (held still while drawing with the finger: the dot it began is taken back)
         longPressFired = true;
         Q_EMIT this->view.contextRequested(this->view.getViewController().viewToScreen(touchSessionStartPos));
@@ -174,9 +177,18 @@ void CanvasInput::penRested() {
     // (no shape: it may rest again later, after moving on)
 }
 
+bool CanvasInput::writingLongPressSuppressed() const {
+    const auto& session = view.getSession();
+    const ToolType tool = session.getToolHandler()->getToolType();
+    return (tool == TOOL_PEN || tool == TOOL_HIGHLIGHTER || tool == TOOL_ERASER) &&
+           !view.isReadingOnly() && !session.isReadOnly() &&
+           CanvasView::suppressWritingLongPressSetting(*session.getSettings());
+}
+
 bool CanvasInput::penHoldTool() const {
     const ToolType tool = view.getSession().getToolHandler()->getToolType();
-    return (tool == TOOL_PEN || tool == TOOL_HIGHLIGHTER || tool == TOOL_HAND) && !view.textMode();
+    return (tool == TOOL_PEN || tool == TOOL_HIGHLIGHTER || tool == TOOL_HAND) && !view.textMode() &&
+           !writingLongPressSuppressed();
 }
 
 void CanvasInput::penHeld() {
@@ -1372,7 +1384,7 @@ bool CanvasInput::touchEvent(QTouchEvent* e, const MapToView& sceneToView) {
         }
         touchSessionTravel = 0;
         longPressFired = false;
-        if (!touchSelection && !touchOnCurtain) {
+        if (!touchSessionIgnored && !touchSelection && !touchOnCurtain && !writingLongPressSuppressed()) {
             // (On a selection a finger drags it, held still as well: its actions are in the selection's pill. On the
             // curtain there is nothing to offer.)
             longPressTimer.start();

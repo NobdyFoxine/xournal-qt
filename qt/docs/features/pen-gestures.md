@@ -17,7 +17,8 @@ ellipse. Upstream's recogniser has no arrows. When it finds nothing, nothing hap
   does in between is not drawn.
 - Undo is upstream's shape recognizer undo: the first undo brings the stroke back as it was drawn, the second removes
   it.
-- The pen must have moved first: a press held still where it went down is the long press (the context menu).
+- The pen must have moved first. Holding it still where it went down opens the context menu if
+  Settings → Touch → "Ignore long presses while writing" is off.
 - Settings → Pen → Gestures: "Hold to straighten" (on by default) and "Hold for" (0.25–2 s). In `settings.xml`:
   `holdToStraighten` and `holdToStraightenTime` (ms) in the `xournalQt` part.
 - Upstream's settings apply: the minimum size of a shape (`strokeRecognizerMinSize`) and snapping recognised shapes to
@@ -27,6 +28,16 @@ How it works: the pen's moves restart nothing; `CanvasInput` keeps where and whe
 6 view pixels, and a timer looks at that when the time is up. Then the page's `GestureStrokeHandler` (upstream's
 `StrokeHandler`, unmodified, with one more method) finishes the stroke and replaces it the way upstream's shape
 recognizer mode does on release (`InsertUndoAction`, then `RecognizerUndoAction`).
+
+## Avoid accidental presses while writing
+
+On Android, Settings → Touch → "Ignore long presses while writing" is on by default. With the pen, highlighter
+or eraser active, holding a finger or the pen on the canvas no longer opens the page menu or selects PDF text.
+Pausing at the start of a pen stroke still lets you draw after the pause. Use "Mark PDF text" to select PDF text.
+
+Settings → Display → "Hide scroll bars while writing" hides the bars with those same ink tools. Finger panning and
+pinching still follow the touch settings. Switch to the hand to show the bars again. "Show page and zoom controls
+on the left" moves the floating page and zoom controls. Both display switches default to on in Android.
 
 ## Scratch out to erase (opt-in)
 
@@ -60,3 +71,7 @@ What only a real device, screen or another app can show; walked before a release
 
 - [ ] Hold to straighten and scratch out (Settings → Pen) trigger with real handwriting, and never while writing
       normally (thresholds).
+- [ ] On an Android tablet, zoom in until both scroll bars would appear. Switch between the pen and the hand,
+      confirm both bars hide and return, and try touch panning and pinch to zoom. Check the page and zoom controls
+      in portrait and landscape. On a PDF, hold the pen or rest the palm on text with the pen tool active; the
+      context actions stay closed and the pen can continue the stroke.

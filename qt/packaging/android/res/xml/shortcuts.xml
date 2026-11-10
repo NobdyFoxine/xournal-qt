@@ -12,7 +12,7 @@
         android:shortcutLongLabel="@string/xqt_quick_note_long">
         <intent
             android:action="org.xournalqt.app.QUICK_NOTE"
-            android:targetPackage="org.xournalqt.app"
+            android:targetPackage="org.xournalqt.writing"
             android:targetClass="org.xournalqt.app.XournalActivity" />
     </shortcut>
 </shortcuts>

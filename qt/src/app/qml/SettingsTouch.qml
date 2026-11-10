@@ -76,6 +76,13 @@ ScrollView {
         }
         SettingsSectionTitle { text: qsTr("Gestures") }
         SettingsSwitchRow {
+            key: "suppressWritingLongPress"
+            text: qsTr("Ignore long presses while writing")
+        }
+        SettingsHint {
+            text: qsTr("With the pen, highlighter or eraser, holding the screen does not open the page menu or select PDF text. Use Mark PDF text to select text on purpose.")
+        }
+        SettingsSwitchRow {
             objectName: "touchDrawingSwitch"
             key: "touchDrawing"
             text: qsTr("Draw with the finger")

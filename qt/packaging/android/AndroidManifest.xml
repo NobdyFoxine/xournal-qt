@@ -6,7 +6,7 @@
      sheet for PDFs, Xournal++ files, Markdown and text files and images. The %%INSERT_...%% markers are filled in by
      androiddeployqt from the target's QT_ANDROID_* properties (qt/cmake/XqtAndroid.cmake). -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.xournalqt.app"
+    package="org.xournalqt.writing"
     android:installLocation="auto"
     android:versionCode="-- %%INSERT_VERSION_CODE%% --"
     android:versionName="-- %%INSERT_VERSION_NAME%% --">

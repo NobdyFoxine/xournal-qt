@@ -191,6 +191,19 @@ ScrollView {
                        + "until it does.")
         }
 
+        SettingsSectionTitle { text: qsTr("Canvas controls") }
+        SettingsSwitchRow {
+            key: "hideScrollBarsWhileWriting"
+            text: qsTr("Hide scroll bars while writing")
+        }
+        SettingsHint {
+            text: qsTr("The scroll bars are hidden with the pen, highlighter or eraser. Switch to the hand to show them again.")
+        }
+        SettingsSwitchRow {
+            key: "viewPillOnLeft"
+            text: qsTr("Show page and zoom controls on the left")
+        }
+
         // The layout for the window's size (qt/docs/features/adaptive-layout.md)
         SettingsSectionTitle { text: qsTr("Window size") }
         SettingsSwitchRow {

@@ -23,13 +23,16 @@ Pane {
     /// The page layout button: not in a phone's portrait nor in the compact pill (it is in ⋮ → View there)
     readonly property bool layoutShown: ["phonePortrait", "tiny"].indexOf(win.adaptive.layoutClass) < 0 && !compact
                                         && !win.layout.phoneChrome
-    // At the canvas's lower right corner, always inside the canvas (8 px from its edges where 28 is too much), and
+    // At a lower corner, always inside the canvas (8 px from its edges where 28 is too much), and
     // above the reference's pill where the two would meet
     readonly property rect refPill: Qt.rect(referenceSplit.x + referenceSplit.pillRect.x,
                                             referenceSplit.y + referenceSplit.pillRect.y,
                                             referenceSplit.pillRect.width, referenceSplit.pillRect.height)
-    x: Math.max(win.layout.canvasControlsLeft + 8, win.layout.canvasControlsRight - width
-                - (win.layout.canvasControlsRight - win.layout.canvasControlsLeft - width >= 56 ? 28 : 8))
+    readonly property bool onLeft: (app.settings.revision, app.settings.get("viewPillOnLeft"))
+    readonly property real sideMargin: win.layout.canvasControlsRight - win.layout.canvasControlsLeft - width >= 56
+                                        ? 28 : 8
+    x: onLeft ? win.layout.canvasControlsLeft + sideMargin
+              : Math.max(win.layout.canvasControlsLeft + 8, win.layout.canvasControlsRight - width - sideMargin)
     /// (above the toolbox floating at the bottom edge where the two would meet: full screen, on a phone held
     /// upright too)
     readonly property real lowY: {
