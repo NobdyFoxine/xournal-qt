@@ -26,6 +26,18 @@ qt_add_resources(xournal-qt xqt_android_share PREFIX /xqt-share BASE "${XQT_BUIL
 qt_add_resources(xournal-qt xqt_android_fonts PREFIX /xqt-fonts BASE "${CMAKE_CURRENT_LIST_DIR}/../resources/fonts"
     FILES "${CMAKE_CURRENT_LIST_DIR}/../resources/fonts/XqtSymbols.ttf")
 
+# Compile the tablet settings translations with the host's Qt tools, then embed them in the APK.
+find_program(XQT_LRELEASE NAMES lrelease-qt6 lrelease6 lrelease
+    HINTS "${QT_HOST_PATH}/bin" "${QT_HOST_PATH}/libexec"
+    NO_CMAKE_FIND_ROOT_PATH REQUIRED)
+set(_xqt_settings_ts "${CMAKE_CURRENT_LIST_DIR}/../translations/xournal_qt_zh_CN.ts")
+set(_xqt_settings_qm "${CMAKE_CURRENT_BINARY_DIR}/xournal_qt_zh_CN.qm")
+add_custom_command(OUTPUT "${_xqt_settings_qm}"
+    COMMAND "${XQT_LRELEASE}" -nounfinished "${_xqt_settings_ts}" -qm "${_xqt_settings_qm}"
+    DEPENDS "${_xqt_settings_ts}" VERBATIM)
+set_source_files_properties("${_xqt_settings_qm}" PROPERTIES QT_RESOURCE_ALIAS xournal_qt_zh_CN.qm)
+qt_add_resources(xournal-qt xqt_settings_translations PREFIX /i18n FILES "${_xqt_settings_qm}")
+
 # Package id, name, versions. The version code grows with the version (0.1.0 -> 100).
 math(EXPR _xqt_version_code "${PROJECT_VERSION_MAJOR} * 10000 + ${PROJECT_VERSION_MINOR} * 100 + ${PROJECT_VERSION_PATCH}")
 set_target_properties(xournal-qt PROPERTIES

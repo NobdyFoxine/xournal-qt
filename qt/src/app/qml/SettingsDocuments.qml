@@ -207,14 +207,14 @@ ScrollView {
             text: qsTr("Translate into")
             options: [
                 { text: qsTr("The system's language (%1)").arg(app.citations.systemLanguage()), value: "" },
-                { text: "English", value: "en" }, { text: "Deutsch", value: "de" },
-                { text: "Français", value: "fr" }, { text: "Español", value: "es" },
-                { text: "Italiano", value: "it" }, { text: "Português", value: "pt" },
-                { text: "Nederlands", value: "nl" }, { text: "Polski", value: "pl" },
-                { text: "Čeština", value: "cs" }, { text: "Svenska", value: "sv" },
-                { text: "Türkçe", value: "tr" }, { text: "Українська", value: "uk" },
-                { text: "Русский", value: "ru" }, { text: "中文 (简体)", value: "zh-CN" },
-                { text: "日本語", value: "ja" }, { text: "한국어", value: "ko" }
+                { text: qsTr("English"), value: "en" }, { text: qsTr("Deutsch"), value: "de" },
+                { text: qsTr("Français"), value: "fr" }, { text: qsTr("Español"), value: "es" },
+                { text: qsTr("Italiano"), value: "it" }, { text: qsTr("Português"), value: "pt" },
+                { text: qsTr("Nederlands"), value: "nl" }, { text: qsTr("Polski"), value: "pl" },
+                { text: qsTr("Čeština"), value: "cs" }, { text: qsTr("Svenska"), value: "sv" },
+                { text: qsTr("Türkçe"), value: "tr" }, { text: qsTr("Українська"), value: "uk" },
+                { text: qsTr("Русский"), value: "ru" }, { text: qsTr("中文 (简体)"), value: "zh-CN" },
+                { text: qsTr("日本語"), value: "ja" }, { text: qsTr("한국어"), value: "ko" }
             ]
         }
         SettingsSectionTitle { text: qsTr("Hybrid PDF") }
@@ -326,7 +326,7 @@ ScrollView {
             ComboBox {
                 objectName: "snipResolutionBox"
                 Layout.fillWidth: true
-                readonly property var choices: sheet.inWindow && win.toolGroups ? win.toolGroups.snipResolutions : []
+                readonly property var choices: sheet.win ? sheet.win.toolGroups.snipResolutions : []
                 model: choices.map(function(c) { return c.name })
                 currentIndex: Math.max(0, choices.map(function(c) { return c.key }).indexOf(app.snipResolution))
                 onActivated: app.snipResolution = choices[currentIndex].key
@@ -357,7 +357,7 @@ ScrollView {
                 Label {
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
-                    text: qsTr("%1 (%2)").arg(modelData.title).arg(modelData.count)
+                    text: qsTr("%1 (%2)").arg(qsTranslate("SettingsData", modelData.title)).arg(modelData.count)
                 }
                 Switch {
                     objectName: "stickerCollectionSwitch_" + modelData.id
@@ -422,7 +422,9 @@ ScrollView {
         kind: "card"
         preferredWidth: 480
         title: qsTr("Notes in the PDF itself")
-        standardButtons: Dialog.Ok
+        footer: DialogButtonBox {
+            Button { text: qsTr("OK"); DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole }
+        }
         Label {
             width: intoPdfExplanation.availableWidth
             wrapMode: Text.Wrap

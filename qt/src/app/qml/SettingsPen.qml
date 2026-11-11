@@ -137,17 +137,16 @@ ScrollView {
             factor: 0.001; decimals: 1; suffix: " s"
         }
         SettingsHint {
-            text: qsTr("The laser pointer and the laser highlighter (in the list of the pen button, and "
-                       + "in the tools of full screen and presenting) draw ink that is never kept: it "
-                       + "fades this long after the pen is lifted.")
+            text: qsTr("The laser pointer and the laser highlighter draw temporary ink that fades after the pen is lifted.")
         }
-        SettingsSectionTitle { text: qsTr("Presenting") }
-        SettingsSwitchRow { objectName: "presenterViewSwitch"; key: "presenterView"; text: qsTr("Presenter view on a second screen") }
-        SettingsSwitchRow { objectName: "presenterSwapSwitch"; key: "presenterSwapScreens"; text: qsTr("Swap the screens") }
-        SettingsSwitchRow { objectName: "presenterShowNotesSwitch"; key: "presenterShowNotes"; text: qsTr("The audience sees the space for notes too") }
-        SettingsSwitchRow { objectName: "presenterFollowSwitch"; key: "presenterFollowView"; text: qsTr("The audience follows the zoom of the console") }
-        SettingsSwitchRow { objectName: "presenterLaserSwitch"; key: "presenterLaser"; text: qsTr("The laser pointer on the rail while presenting") }
+        SettingsSectionTitle { visible: !sheet.win.tabletEdition; text: qsTr("Presenting") }
+        SettingsSwitchRow { visible: !sheet.win.tabletEdition; objectName: "presenterViewSwitch"; key: "presenterView"; text: qsTr("Presenter view on a second screen") }
+        SettingsSwitchRow { visible: !sheet.win.tabletEdition; objectName: "presenterSwapSwitch"; key: "presenterSwapScreens"; text: qsTr("Swap the screens") }
+        SettingsSwitchRow { visible: !sheet.win.tabletEdition; objectName: "presenterShowNotesSwitch"; key: "presenterShowNotes"; text: qsTr("The audience sees the space for notes too") }
+        SettingsSwitchRow { visible: !sheet.win.tabletEdition; objectName: "presenterFollowSwitch"; key: "presenterFollowView"; text: qsTr("The audience follows the zoom of the console") }
+        SettingsSwitchRow { visible: !sheet.win.tabletEdition; objectName: "presenterLaserSwitch"; key: "presenterLaser"; text: qsTr("The laser pointer on the rail while presenting") }
         SettingsHint {
+            visible: !sheet.win.tabletEdition
             text: qsTr("With a second screen (a projector), presenting%1 shows only the slide there, "
                        + "and on this screen the page with its space for notes and the tools, as when "
                        + "presenting on one screen, and a small pill with the minutes since the start (a tap: "
@@ -181,7 +180,7 @@ ScrollView {
         SettingsComboRow {
             objectName: "colorPaletteRow"
             text: qsTr("Color palette")
-            options: app.colorPalettes.map(function(p) { return { text: p.name, value: p.id } })
+            options: app.colorPalettes.map(function(p) { return { text: qsTranslate("SettingsData", p.name), value: p.id } })
             dependsOn: app.colorPalette
             getter: function() { return app.colorPalette }
             setter: function(id) { app.colorPalette = id }
@@ -218,7 +217,7 @@ ScrollView {
                 return ""
             }
             visible: source !== ""
-            text: qsTr("From: %1").arg(source)
+            text: qsTr("From: %1").arg(qsTranslate("SettingsData", source))
         }
         SettingsHint {
             text: qsTr("A tool's editor (a tap on the tool in hand) offers the palette's colors and this "

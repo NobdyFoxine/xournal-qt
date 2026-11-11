@@ -28,12 +28,14 @@ endif()
 # The bundled plugins (qt/resources/plugins/<folder>/): copied into the resource dir as plugins/<folder>/, where the
 # host finds them (the build tree's share/xournal-qt for development; installed with it by XqtPackage.cmake; on
 # Android in the APK's /xqt-share, copied to the app's data folder at start like the handwriting models)
-file(GLOB_RECURSE _xqt_plugin_files CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_LIST_DIR}/../resources/plugins"
-    "${CMAKE_CURRENT_LIST_DIR}/../resources/plugins/*")
-foreach(_xqt_file ${_xqt_plugin_files})
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/../resources/plugins/${_xqt_file}"
-        "${XQT_BUILD_RESOURCE_DIR}/plugins/${_xqt_file}" COPYONLY)
-endforeach()
+if(NOT ANDROID)
+    file(GLOB_RECURSE _xqt_plugin_files CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_LIST_DIR}/../resources/plugins"
+        "${CMAKE_CURRENT_LIST_DIR}/../resources/plugins/*")
+    foreach(_xqt_file ${_xqt_plugin_files})
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/../resources/plugins/${_xqt_file}"
+            "${XQT_BUILD_RESOURCE_DIR}/plugins/${_xqt_file}" COPYONLY)
+    endforeach()
+endif()
 
 if(XQT_BUILD_TESTS)
     add_executable(xqt-plugins-tests

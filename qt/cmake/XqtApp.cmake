@@ -242,6 +242,7 @@ set(XQT_QML_FILES
     # (the window's state objects: win.insets, win.modes, win.layout)
     src/app/qml/WindowInsets.qml
     src/app/qml/ViewModes.qml
+    src/app/qml/StylusDoubleTap.qml
     src/app/qml/ChromeLayout.qml
     # (the parts of the window, each instantiated once in Main.qml)
     src/app/qml/SaveFlow.qml

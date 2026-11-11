@@ -266,11 +266,12 @@ Row {
                     }
                     onObjectRemoved: function(index, object) { moreToolsMenu.removeItem(object) }
                 }
-                MenuSeparator { objectName: "pluginsSeparator" }
+                MenuSeparator { objectName: "pluginsSeparator"; property bool offered: !win.tabletEdition; visible: offered; height: offered ? implicitHeight : 0 }
                 // Plugins (qt/docs/features/plugins.md): the commands of the plugins that are on, and their settings
                 AdaptiveMenu {
                     id: morePluginsMenu
                     objectName: "morePluginsMenu"
+                    offered: !win.tabletEdition
                     title: qsTr("Plugins")
                     iconName: "xqt-plugin"
                     Instantiator {
@@ -310,7 +311,7 @@ Row {
                 // A black sheet over part of the page, for teaching and presenting (qt/docs/features/curtain.md)
                 AdaptiveMenuItem { objectName: "curtainItem"; offered: !win.textDoc; checkable: true; checked: app.curtain === "curtain"; text: qsTr("Curtain (B)"); icon.source: app.iconUrl("xqt-curtain"); onTriggered: app.toggleCurtain("curtain") }
                 AdaptiveMenuItem { objectName: "spotlightItem"; offered: !win.textDoc; checkable: true; checked: app.curtain === "spotlight"; text: qsTr("Spotlight") + win.keyNote("spotlight"); icon.source: app.iconUrl("xqt-spotlight"); onTriggered: app.toggleCurtain("spotlight") }
-                AdaptiveMenuItem { objectName: "presentCleanItem"; text: qsTr("Present without controls") + win.keyNote("presentClean"); icon.source: app.iconUrl("xopp-presentation-mode"); onTriggered: win.modes.startPresenting(true) }
+                AdaptiveMenuItem { objectName: "presentCleanItem"; offered: !win.tabletEdition; text: qsTr("Present without controls") + win.keyNote("presentClean"); icon.source: app.iconUrl("xopp-presentation-mode"); onTriggered: win.modes.startPresenting(true) }
                 // Zen: only the page and a faint dot (qt/docs/features/zen.md)
                 AdaptiveMenuItem {
                     objectName: "zenItem"

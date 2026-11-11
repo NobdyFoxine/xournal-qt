@@ -75,6 +75,10 @@ ScrollView {
                          + "also choose here from which height on it counts as away.")
         }
         SettingsSectionTitle { text: qsTr("Gestures") }
+        SettingsHint {
+            visible: sheet.win.tabletEdition
+            text: qsTr("On Huawei tablets, choose a double-tap action in System settings → Accessibility features → Stylus. Double-tap the pen barrel to switch to the eraser or the previous tool.")
+        }
         SettingsSwitchRow {
             key: "suppressWritingLongPress"
             text: qsTr("Ignore long presses while writing")

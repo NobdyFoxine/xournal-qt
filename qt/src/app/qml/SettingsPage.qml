@@ -57,9 +57,8 @@ Popup {
         {key: "newPages", title: qsTr("New pages")},
         {key: "storage", title: qsTr("Storage")},
         {key: "shortcuts", title: qsTr("Shortcuts")},
-        {key: "plugins", title: qsTr("Plugins")},
         {key: "help", title: qsTr("Help")}
-    ]
+    ].concat(win.tabletEdition ? [] : [{key: "plugins", title: qsTr("Plugins")}])
     function sectionIndex(key) {
         for (let i = 0; i < sections.length; ++i) {
             if (sections[i].key === key) return i
@@ -68,7 +67,9 @@ Popup {
     }
     /// Show the section `key` (on a phone: open it from the list)
     function showSection(key) {
-        tabs.currentIndex = sectionIndex(key)
+        const index = sectionIndex(key)
+        if (index < 0) return
+        tabs.currentIndex = index
         sectionShown = true
     }
     function showShortcuts() { showSection("shortcuts") }
@@ -222,11 +223,13 @@ Popup {
             // --- Shortcuts ---
             SettingsShortcuts {}
 
-            // --- Plugins (qt/docs/features/plugins.md) ---
-            SettingsPlugins {}
-
             // --- Help: the introduction of the first start, the keyboard shortcuts (qt/docs/features/onboarding.md)
             SettingsHelp {}
+
+            Loader {
+                active: !sheet.win.tabletEdition
+                sourceComponent: SettingsPlugins {}
+            }
         }
     }
 }

@@ -15,9 +15,11 @@ package org.xournalqt.app;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -35,6 +37,28 @@ import java.util.ArrayList;
 import org.qtproject.qt.android.bindings.QtActivity;
 
 public class XournalActivity extends QtActivity {
+    private static final String STYLUS_DOUBLE_TAP = "com.huawei.stylus.action.BUTTON_DOUBLE_PRESSED";
+    private static final String STYLUS_DOUBLE_TAP_MODE = "double_click_switch_mode";
+    private static final boolean HUAWEI_STYLUS = "HUAWEI".equalsIgnoreCase(Build.MANUFACTURER)
+                                               || "HONOR".equalsIgnoreCase(Build.MANUFACTURER);
+    private boolean stylusReceiverRegistered;
+    private final BroadcastReceiver stylusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!hasWindowFocus() || !STYLUS_DOUBLE_TAP.equals(intent.getAction())) {
+                return;
+            }
+            int mode = Settings.Global.getInt(getContentResolver(), STYLUS_DOUBLE_TAP_MODE, 0);
+            if (mode == 0 || mode == 1) {
+                try {
+                    stylusDoubleTapped(mode);
+                } catch (UnsatisfiedLinkError e) {
+                    // The window can gain focus while Qt is starting up.
+                }
+            }
+        }
+    };
+
     /// What a share of text alone (no file) is reported as: the native side says that only files can be received.
     public static final String SHARED_TEXT = "xournal-qt:shared-text";
     /// The launcher's shortcut "Quick note" (res/xml/shortcuts.xml) starts the activity with this action ...
@@ -55,6 +79,7 @@ public class XournalActivity extends QtActivity {
 
     /// Registered by the native side (AndroidActivity.cpp, watchRecordingCommands): the notification's buttons.
     private static native void recordingCommand(int command);
+    private static native void stylusDoubleTapped(int mode);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +88,36 @@ public class XournalActivity extends QtActivity {
         if (savedInstanceState == null) {  // (recreated: that intent was handled before)
             receive(getIntent());
         }
+    }
+
+    // Huawei delivers the double tap to the focused activity. The OEM service runs outside this app.
+    @Override
+    public void onWindowFocusChanged(boolean focused) {
+        super.onWindowFocusChanged(focused);
+        if (focused && HUAWEI_STYLUS && !stylusReceiverRegistered) {
+            IntentFilter filter = new IntentFilter(STYLUS_DOUBLE_TAP);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(stylusReceiver, filter, Context.RECEIVER_EXPORTED);
+            } else {
+                registerReceiver(stylusReceiver, filter);
+            }
+            stylusReceiverRegistered = true;
+        } else if (!focused) {
+            unregisterStylusReceiver();
+        }
+    }
+
+    private void unregisterStylusReceiver() {
+        if (stylusReceiverRegistered) {
+            unregisterReceiver(stylusReceiver);
+            stylusReceiverRegistered = false;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        unregisterStylusReceiver();
+        super.onDestroy();
     }
 
     @Override

@@ -97,7 +97,9 @@ ColumnLayout {
         property string actionId: ""
         preferredWidth: 360
         title: qsTr("Press the keys")
-        standardButtons: Dialog.Cancel
+        footer: DialogButtonBox {
+            Button { text: qsTr("Cancel"); DialogButtonBox.buttonRole: DialogButtonBox.RejectRole }
+        }
         onOpened: catcher.forceActiveFocus()
         ColumnLayout {
             width: capture.availableWidth

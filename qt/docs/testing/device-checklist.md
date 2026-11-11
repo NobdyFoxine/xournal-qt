@@ -22,6 +22,7 @@ since) is in git: `git show 5c6402d:qt/docs/testing/device-checklist.md`.
       (also on a canvas turned by 90° and by a free angle).
 - [ ] Highlighter translucent and multiplied with what is under it.
 - [ ] The pen's side buttons and its eraser end erase while held; the pen draws again afterwards.
+- [ ] Huawei M-Pencil double tap and compact Android controls: [MatePad edition](../features/matepad.md#on-the-device).
 - [ ] A stroke from one page into the next continues on the next page.
 - [ ] The pointer over the page, pen gestures, the setsquare and the compass: [hover-cursors.md](../features/hover-cursors.md#on-the-device),
       [pen-gestures.md](../features/pen-gestures.md#on-the-device), [toolbox.md](../features/toolbox.md#on-the-device).

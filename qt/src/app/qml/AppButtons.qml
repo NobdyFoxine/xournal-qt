@@ -407,7 +407,7 @@ Item {
             id: presentTool
             objectName: "presentButton"
             parent: toolBank
-            property bool offered: !win.modes.fullScreenMode
+            property bool offered: !win.tabletEdition && !win.modes.fullScreenMode
             iconName: "xopp-presentation-mode"
             label: qsTr("Present")
             tip: qsTr("Present%1. Hold: its menu with \"Present without controls\"%2").arg(win.keyNote("present")).arg(win.keyNote("presentClean"))

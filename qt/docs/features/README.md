@@ -57,6 +57,7 @@ certain way is in [decisions/](../decisions/README.md); what changed in a releas
 | Doc | What |
 | --- | --- |
 | [adaptive-layout.md](adaptive-layout.md) | the layout for the window's size: size classes, sidebar, menus, sheets, the phone chrome, safe areas, the soft keyboard |
+| [matepad.md](matepad.md) | Android settings in Simplified Chinese, compact toolbar, and M-Pencil double tap |
 | [zen.md](zen.md) | Zen, read only, Read; the Esc/Back dispatcher |
 | [reference-view.md](reference-view.md) | a second document (or the same one) beside the notes; comparing versions |
 | [presenter-view.md](presenter-view.md) | presenting on a second screen |

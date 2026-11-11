@@ -146,7 +146,7 @@ Item {
     /// screens this window becomes the presenter's console on one of them (off the audience's screen first) and the
     /// audience's window shows the slide on the other.
     function startPresenting(clean) {
-        if (app.homeVisible) return
+        if (win.tabletEdition || app.homeVisible) return
         presentClean = clean === true
         if (app.presenter.available) app.presenter.placeConsole(win)
         fullScreenMode = true

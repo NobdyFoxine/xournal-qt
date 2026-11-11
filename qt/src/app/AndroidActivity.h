@@ -23,6 +23,9 @@ void watchIncomingFiles(std::function<void(const QStringList&)> receive);
 /// A stylus is attached (Android's input devices report a stylus source).
 bool hasStylus();
 
+/// Huawei M-Pencil: deliver the system's double-tap mode on the Qt UI thread.
+void watchStylusDoubleTaps(std::function<void(int)> receive);
+
 /// A recording runs, paused or ended: the foreground service that keeps the microphone in the background, with its
 /// notification (qt/docs/features/audio.md, "Android"): the time (`recordedMs` now; its clock runs on while not
 /// paused), the document's `title`, and Pause/Resume and Stop. `labels`: the notification's texts, translated

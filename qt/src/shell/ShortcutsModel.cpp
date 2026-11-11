@@ -86,12 +86,14 @@ ShortcutsModel::ShortcutsModel(Settings& settings, QObject* parent): QAbstractLi
             // (the reference view: both sides scrolled together; no key by default - Ctrl+Alt+L locks the screen on
             // many desktops)
             {"lockScroll", tr("Scroll the document and the reference together"), view, {}},
+#ifndef Q_OS_ANDROID
             {"present", tr("Present (full screen, page by page)"), view, {"F5"}},
             // (only the page: no floating toolbox; again while presenting: the controls back)
             {"presentClean", tr("Present without controls"), view, {"Ctrl+F5"}},
             // (while presenting only: the page grid over the slide, a page tapped is presented;
             // qt/docs/features/presenter-view.md)
             {"presentPages", tr("All pages while presenting"), view, {"G"}},
+#endif
             // (qt/docs/features/zen.md: Read is Zen and read only, in full screen; again: back)
             {"read", tr("Read (Zen, read only, full screen)"), view, {"Ctrl+Alt+R"}},
             // (qt/docs/features/zen.md: only the page and a faint dot; again, or Esc: the controls back)

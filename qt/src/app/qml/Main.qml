@@ -110,6 +110,7 @@ ApplicationWindow {
     /// The document is a text file (a .md, a .txt): written with the keyboard, no ink tools
     /// (qt/docs/features/md-editor.md)
     readonly property bool textDoc: app.textDocument !== ""
+    readonly property bool tabletEdition: Qt.platform.os === "android"
     readonly property bool writingWithInk: !textDoc && !canvas.readingOnly
                                             && ["pen", "highlighter", "eraser"].indexOf(app.tool) >= 0
     /// The cycling buttons' groups (ToolGroups.qml): the fixed tools of the toolbox (select, snip, setsquare, text)
@@ -233,6 +234,7 @@ ApplicationWindow {
         id: tabStrip
         objectName: "tabStrip"
         width: parent.width
+        compact: win.tabletEdition
         topInset: win.insets.top
         leftInset: win.insets.left
         rightInset: win.insets.right
@@ -257,7 +259,7 @@ ApplicationWindow {
         visible: !app.homeVisible && !win.layout.noToolbar && !win.layout.toolsInFormatBar && !win.layout.phoneChrome && !win.modes.replaying
         Material.background: "#ffffff"
         Material.foreground: "#303030"
-        height: 56
+        height: win.tabletEdition ? 48 : 56
       }
       // Markdown being written (a .md, Markdown on a page): its formatting tools (qt/docs/features/md-editor.md). A
       // text document's top bar is merged into it (F7.2): its items at the end of the row, ⋮ pinned at its end
@@ -1035,6 +1037,10 @@ ApplicationWindow {
     }
 
     WindowShortcuts { id: windowShortcuts; objectName: "windowShortcuts" }
+    StylusDoubleTap {
+        enabled: win.tabletEdition && win.active && windowShortcuts.toolKeys
+                 && windowShortcuts.backTakers === 0 && !win.textDoc && !canvas.readingOnly && !canvas.textEditing
+    }
     // The keys come from the shortcut settings (app.shortcuts); reading its revision keeps the bindings fresh.
     function keysOf(id) { return (app.shortcuts.revision, app.shortcuts.keys(id)) }
     ShortcutSheet {

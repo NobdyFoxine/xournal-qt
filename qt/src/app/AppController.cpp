@@ -1123,6 +1123,11 @@ void AppController::setSnapPages(bool snap) {
 }
 
 void AppController::setPresenting(bool on) {
+#ifdef Q_OS_ANDROID
+    if (on) {
+        return;
+    }
+#endif
     if (on == presentingOn || (on && !canvas())) {
         return;
     }

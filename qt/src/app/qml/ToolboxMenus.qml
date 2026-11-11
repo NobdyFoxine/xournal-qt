@@ -33,12 +33,14 @@ Item {
         objectName: "toolboxMoreMenu"
         AdaptiveMenuItem {
             objectName: "toolboxPresentItem"
+            offered: !win.tabletEdition
             text: app.presenting ? qsTr("Stop presenting (Esc)") : qsTr("Present") + win.keyNote("present")
             icon.source: app.iconUrl("xopp-presentation-mode")
             onTriggered: app.presenting ? (app.presenting = false) : win.modes.startPresenting()
         }
         AdaptiveMenuItem {
             objectName: "toolboxPresentCleanItem"
+            offered: !win.tabletEdition
             text: (app.presenting ? qsTr("Hide the tools") : qsTr("Present without controls")) + win.keyNote("presentClean")
             icon.source: app.iconUrl("xqt-eye-off")
             onTriggered: app.presenting ? (win.modes.presentClean = true) : win.modes.startPresenting(true)

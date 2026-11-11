@@ -23,6 +23,7 @@
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QTimer>
+#include <QTranslator>
 
 #include <QDir>
 #include <QFileInfo>
@@ -130,6 +131,12 @@ int main(int argc, char* argv[]) {
     // Folders, resources and fonts for the core (GLib, fontconfig), before anything reads them.
     xqt::android::prepareEnvironment();
     xqt::android::addSymbolFallback();
+    QTranslator settingsTranslator;
+    if (settingsTranslator.load(QStringLiteral(":/i18n/xournal_qt_zh_CN.qm"))) {
+        qapp.installTranslator(&settingsTranslator);
+    } else {
+        qWarning("xournal-qt: could not load the Simplified Chinese settings");
+    }
 #endif
 #ifdef Q_OS_WIN
     // UTF-8 for std::filesystem's narrow strings, GLib's cache folder, fontconfig (see qt/docs/development/windows.md).
@@ -323,6 +330,7 @@ int main(int argc, char* argv[]) {
     // A phone without a pen (the Galaxy Fold 7) is written on with the finger: drawing with the finger is on at the
     // first start there, off where a stylus is attached (as on the desktop)
     controller.setFingerDrawingDefault(!xqt::android::hasStylus());
+    xqt::android::watchStylusDoubleTaps([&controller](int mode) { Q_EMIT controller.stylusDoubleTapped(mode); });
     // A recording keeps the microphone in the background through a foreground service, whose notification shows
     // its time with Pause/Resume and Stop (qt/docs/features/audio.md, "Android"); refused, the microphone is allowed on
     // the app's page of the system's settings

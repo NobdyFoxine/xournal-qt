@@ -47,6 +47,21 @@ std::function<void(int)>& recordingCommand() {
     return c;
 }
 
+std::function<void(int)>& stylusDoubleTap() {
+    static std::function<void(int)> receive;
+    return receive;
+}
+
+void JNICALL stylusDoubleTapArrived(JNIEnv*, jclass, jint mode) {
+    if (auto* application = QCoreApplication::instance()) {
+        QMetaObject::invokeMethod(application, [mode] {
+            if (stylusDoubleTap()) {
+                stylusDoubleTap()(static_cast<int>(mode));
+            }
+        }, Qt::QueuedConnection);
+    }
+}
+
 /// Java (the notification's buttons, through RecordingService on the Android UI thread)
 void JNICALL recordingCommandArrived(JNIEnv*, jclass, jint command) {
     QMetaObject::invokeMethod(QCoreApplication::instance(), [command] {
@@ -75,6 +90,15 @@ void watchIncomingFiles(std::function<void(const QStringList&)> receive) {
 }
 
 bool hasStylus() { return QJniObject::callStaticMethod<jboolean>(ACTIVITY, "hasStylus", "()Z"); }
+
+void watchStylusDoubleTaps(std::function<void(int)> receive) {
+    stylusDoubleTap() = std::move(receive);
+    QJniEnvironment env;
+    const JNINativeMethod methods[] = {{"stylusDoubleTapped", "(I)V", reinterpret_cast<void*>(&stylusDoubleTapArrived)}};
+    if (!env.registerNativeMethods(ACTIVITY, methods, 1)) {
+        qWarning("xournal-qt: could not receive Huawei stylus double taps");
+    }
+}
 
 void setRecording(bool on, bool paused, qint64 recordedMs, const QString& title, const QStringList& labels) {
     QJniEnvironment env;

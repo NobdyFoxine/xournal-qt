@@ -155,6 +155,9 @@ AppServices::AppServices() {
 
     // The plugins (qt/docs/features/plugins.md): the bundled ones beside the handwriting models, the user's in the
     // app's data folder; which are on and what each was allowed in our settings
+#ifdef Q_OS_ANDROID
+    pluginHost = std::make_unique<plugins::PluginHost>(QStringList{}, nullptr, nullptr);
+#else
     const QString userPlugins =
             QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(QStringLiteral("plugins"));
     pluginHost = std::make_unique<plugins::PluginHost>(
@@ -189,6 +192,7 @@ AppServices::AppServices() {
     };
     offerCommands();
     QObject::connect(pluginHost.get(), &plugins::PluginHost::pluginsChanged, pluginHost.get(), offerCommands);
+#endif
 }
 
 AppServices::~AppServices() {

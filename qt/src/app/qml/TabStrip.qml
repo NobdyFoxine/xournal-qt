@@ -16,6 +16,7 @@ Rectangle {
     readonly property real undockDistance: 60
     /// A tab can get a window of its own (not on Android and iOS: one window there)
     property bool undockable: true
+    property bool compact: false
     signal overviewRequested()
     /// The tab should get a window of its own (dragged off the strip), or go back to the main window.
     signal undockRequested(int index)
@@ -29,7 +30,8 @@ Rectangle {
     /// Its buttons: a finger's size in the touch profile (48), else 40 (audit F14; qt/docs/features/adaptive-layout.md)
     readonly property bool touch: win.adaptive.touchProfile
     readonly property int target: win.adaptive.minTarget
-    implicitHeight: Math.max(46, target + 6) + topInset
+    readonly property int tabTopMargin: compact ? 0 : 4
+    implicitHeight: (compact ? Math.max(48, target) : Math.max(46, target + 6)) + topInset
     color: "#dfe1e5"
 
     RowLayout {
@@ -293,7 +295,7 @@ Rectangle {
                         sourceSize.width: 16
                         sourceSize.height: 16
                         Layout.leftMargin: 10
-                        Layout.topMargin: 4
+                        Layout.topMargin: strip.tabTopMargin
                         ToolTip.visible: badgeHover.hovered
                         ToolTip.text: qsTr("Shown beside the current document")
                         ToolTip.delay: 600
@@ -305,7 +307,7 @@ Rectangle {
                         visible: !tab.renaming
                         Layout.fillWidth: true
                         Layout.leftMargin: tab.isReference && !app.homeVisible ? 4 : 12
-                        Layout.topMargin: 4
+                        Layout.topMargin: strip.tabTopMargin
                         // (the dot stays until the file is written)
                         text: (tab.modified ? "● " : "") + tab.title + (tab.saving ? " — " + qsTr("saving…") : "")
                         elide: Text.ElideMiddle
@@ -318,13 +320,13 @@ Rectangle {
                         visible: active
                         Layout.fillWidth: true
                         Layout.leftMargin: 8
-                        Layout.topMargin: 4
+                        Layout.topMargin: strip.tabTopMargin
                         check: function(name) { return app.tabRenameProblem(tab.index, name) }
                         onAccepted: function(name) { app.renameTab(tab.index, name) }
                     }
                     ToolButton {
                         objectName: "tabCloseButton"
-                        Layout.topMargin: 4
+                        Layout.topMargin: strip.tabTopMargin
                         implicitWidth: strip.touch ? strip.target : 36
                         implicitHeight: strip.touch ? strip.target : 36
                         icon.source: app.iconUrl("xqt-close")

@@ -1566,6 +1566,7 @@ Q_SIGNALS:
     void anySavingChanged();
     void undoRedoChanged();
     void toolChanged();
+    void stylusDoubleTapped(int mode);
     /// The curtain came or went, or its handles did (also: another tab)
     void curtainChanged();
     void zoomChanged();

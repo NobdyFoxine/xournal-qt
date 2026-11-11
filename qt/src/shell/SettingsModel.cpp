@@ -7,6 +7,7 @@
 #include <string_view>
 
 #include <QColor>
+#include <QCoreApplication>
 #include <QScreen>
 #include <QVariantMap>
 #include <QWindow>
@@ -55,9 +56,9 @@ constexpr std::array<PaperFormat, 11> PAPER_FORMATS{{{"A0", mm(841), mm(1189)},
                                                       {"A5", mm(148), mm(210)},
                                                       {"A6", mm(105), mm(148)},
                                                       {"A7", mm(74), mm(105)},
-                                                      {"Letter", 612, 792},
-                                                      {"Legal", 612, 1008},
-                                                      {QT_TRANSLATE_NOOP("SettingsModel", "16:9 (presentation)"), 540, 960,
+                                                      {QT_TRANSLATE_NOOP("xqt::SettingsModel", "Letter"), 612, 792},
+                                                      {QT_TRANSLATE_NOOP("xqt::SettingsModel", "Legal"), 612, 1008},
+                                                      {QT_TRANSLATE_NOOP("xqt::SettingsModel", "16:9 (presentation)"), 540, 960,
                                                        true}}};
 
 /// How long touch waits once the pen is away ("touch" / "timeout"), in milliseconds. Upstream waits a second; with a
@@ -692,7 +693,7 @@ void SettingsModel::add(const QString& key, std::function<QVariant()> get, std::
 QStringList SettingsModel::pageBackgrounds() const {
     QStringList names;
     for (const auto& info: app.getPageTypes()->getPageTypes()) {
-        names << QString::fromStdString(info->name);
+        names << QCoreApplication::translate("SettingsData", info->name.c_str());
     }
     return names;
 }
